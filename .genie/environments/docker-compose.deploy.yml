@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  api:
+    image: kabootar.dkr.ecr.ap-kabootar-1.amazonaws.com/kabootar:latest
+    env_file:
+      - .env
+    ports:
+      - "80:8000"
+
+volumes:
+  static_data:

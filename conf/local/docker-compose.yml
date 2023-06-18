@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: local.mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_INITDB_DATABASE: local
+
+  kabootar-local:
+    container_name: local.project
+    build:
+      context: ../../
+      dockerfile: ./conf/local/Dockerfile
+      args:
+        - USER_ID=$UID
+        - GROUP_ID=$GID
+    command: sh -c "pytest && uvicorn kabootar.main:app --host 0.0.0.0 --port 8000 --reload"
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ../../kabootar:/app
+
+volumes:
+  mongo:
+
+
+
