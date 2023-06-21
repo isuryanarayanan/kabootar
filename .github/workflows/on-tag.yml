@@ -30,10 +30,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Copy environment variables and dockerfile file for production
-        run: cp environments/local/.env .env && cp environments/local/Dockerfile.deploy Dockerfile
-
-      - name: Copy .ebextensions folder for production
-        run: cp -r environments/development/.ebextensions .ebextensions
+        run: cp environments/development/.env .env && cp environments/development/Dockerfile.deploy Dockerfile
 
       - name: Copy docker-compose file for production
         run: cp environments/development/docker-compose.deploy.yml docker-compose.yml
@@ -65,8 +62,8 @@ jobs:
       - name: Swap out the :latest tag from the docker-compose file
         run: sed -i 's/:latest/:${{ steps.get_version.outputs.VERSION }}/g' docker-compose.yml
 
-      - name: Zip docker-compose file .env file and .ebextensions folder
-        run: zip compose.zip docker-compose.yml .env .ebextensions
+      - name: Zip docker-compose file and .env file 
+        run: zip compose.zip docker-compose.yml .env 
 
       - name: Get timestamp
         id: timestamp

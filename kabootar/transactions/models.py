@@ -1,19 +1,5 @@
 from django.db import models
-
-CHANNEL_TYPES = (
-    ('EMAIL', 'EMAIL'),
-)
-
-class Channel(models.Model):
-    """
-    Channels are the various ways in which you can send messages to users.
-    """
-
-    name = models.CharField(choices=CHANNEL_TYPES, max_length=250)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
+from email_service.models import EmailSesTemplate, EmailSesEvent
 
 class TransactionTemplate(models.Model):
     """
@@ -24,10 +10,10 @@ class TransactionTemplate(models.Model):
     # Else, we can create a new model for each channel type. And use
     # a generic foreign key to point to the template.
 
-    template = models.ForeignKey(EmailSESTemplate, on_delete=models.CASCADE)
+    template = models.ForeignKey(EmailSesTemplate, on_delete=models.CASCADE)
 
     priority = models.IntegerField(default=0)
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    transaction = models.ForeignKey('Transaction', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.template.name + " - " + str(self.priority)
@@ -40,26 +26,40 @@ class Transaction(models.Model):
 
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
-    context = models.JSONField(default=dict)
 
     def __str__(self):
         return self.name
     
+class SendTransaction(models.Model):
+    """
+    Holds the data for the transaction. When user adds data for the
+    transaction, events are created and sent accordingly.
+    """
+
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    email = models.EmailField()
+    context = models.JSONField()
+
+    def __str__(self):
+        return self.transaction.name
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        template_stack = TemplateStackItem.objects.filter(
-            transaction=self
+        template_stack = TransactionTemplate.objects.filter(
+            transaction=self.transaction
         ).order_by("-priority")
 
         for template in template_stack:
-            if template.template.template_identifier in self.context:
-                template_context = self.context[template.template.template_identifier]
-                email = TemplatedEmail(
+            if template.template.name in self.context:
+                template_context = self.context[template.template.name]
+                email = EmailSesEvent(
                     template=template.template,
                     email=self.email,
-                    template_data=template_context
+                    data=template_context
                 )
+                
                 email.send()
-
-   
+            else:
+                raise Exception("Template data is not provided, or is not in the correct format.")
+  
