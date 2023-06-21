@@ -12,7 +12,8 @@ class Channel(models.Model):
     Channels are the various ways in which you can send messages to users.
     """
 
-    name = models.CharField(choices=CHANNEL_TYPES, max_length=250)
+    channel = models.CharField(choices=CHANNEL_TYPES, max_length=250)
+    name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
 
     def __str__(self):
