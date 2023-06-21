@@ -1,5 +1,19 @@
 **Kabootar - Simplify Transactional Messaging Integration**
 
+Using genie for running your project
+```bash
+$ git clone git@github.com:isuryanarayanan/kabootar.git
+$ chmod +x ./genie.sh
+$ ./genie.sh
+```
+
+or run it directly
+
+```bash
+$ docker compose -f conf/local/docker-compose.yml up
+```
+
+
 Kabootar is an open-source Python package that simplifies the integration of transactional messaging services like email and SMS into your applications. It provides a unified API for seamless integration and offers features like template management and event-driven messaging. Easily send transactional messages using different messaging platforms with Kabootar.
 
 **Key Features:**
