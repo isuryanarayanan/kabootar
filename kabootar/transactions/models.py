@@ -1,6 +1,18 @@
 from django.db import models
 from email_service.models import EmailSesTemplate, EmailSesEvent
 
+class Transaction(models.Model):
+    """
+    Holds templates and when user adds data for the template,
+    events are created and sent accordingly.
+    """
+
+    name = models.CharField(max_length=250, unique=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
 class TransactionTemplate(models.Model):
     """
     Holds single template and its priority in the stack.
@@ -18,17 +30,6 @@ class TransactionTemplate(models.Model):
     def __str__(self):
         return self.template.name + " - " + str(self.priority)
 
-class Transaction(models.Model):
-    """
-    Holds templates and when user adds data for the template,
-    events are created and sent accordingly.
-    """
-
-    name = models.CharField(max_length=250, unique=True)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
     
 class SendTransaction(models.Model):
     """
