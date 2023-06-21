@@ -1,19 +1,24 @@
-# kabootar
-Sends messages.
+**Kabootar - Simplify Transactional Messaging Integration**
 
-# Getting Started
-You can run the entire kabootar backend server with genie.sh in a shell environment, for windows users you can use wsl or git shell.
+Kabootar is an open-source Python package that simplifies the integration of transactional messaging services like email and SMS into your applications. It provides a unified API for seamless integration and offers features like template management and event-driven messaging. Easily send transactional messages using different messaging platforms with Kabootar.
 
-```bash
-$ chmod +x ./genie.sh
-$ ./genie.sh
-```
+**Key Features:**
+- Seamless integration with email and SMS services.
+- Manage message templates and customize them with dynamic data.
+- Automate message sending with event-driven messaging.
+- Secure secrets management for API keys and credentials.
+- Flexible configuration to adapt to project requirements.
 
-Then select a configuration you want to run.
+**Requirements:**
+- Kabootar requires the Serverless Framework CLI to be installed. You can install it by following the instructions provided at [Serverless Framework](https://www.serverless.com/framework/docs/getting-started/).
 
-# Creating a configuration
-You can create a new configuration by adding the create flag to genie.
+**Getting Started:**
+- Install Kabootar using `pip install kabootar`.
+- Follow the documentation and examples for integrations and template management.
+- Start sending transactional messages in your applications effortlessly.
 
-```bash
-$ ./genie.sh --create
-```
+**Contributing:**
+- Contributions, bug reports, and feature requests are welcome! Please review our contribution guidelines before making any contributions.
+
+**License:**
+- Kabootar is released under the MIT License. See the `LICENSE` file for more details.

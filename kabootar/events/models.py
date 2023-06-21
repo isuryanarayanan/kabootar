@@ -1,19 +1,54 @@
-"""
-Models for events
-"""
+from django.db import models
+from aws.models import SESEmailTemplate, TemplatedEmail
+from django.conf import settings
 
-from pydantic import BaseModel, Field
-from typing import Optional, List
-from bson import ObjectId
-from datetime import datetime
+class TemplateStackItem(models.Model):
+    template = models.ForeignKey(
+        SESEmailTemplate, on_delete=models.CASCADE, null=True, blank=True
+    )
 
-class Event(BaseModel):
-    id: Optional[ObjectId] = Field(alias="_id")
-    name: str = Field(...)
+    priority = models.IntegerField(default=0)
 
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: str
-        }
+    event = models.ForeignKey(
+        "Event", on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class SendEvent(models.Model):
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    email = models.EmailField()
+    context = models.JSONField()
+
+    def __str__(self):
+        return self.event.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        template_stack = TemplateStackItem.objects.filter(
+            event=self.event
+        ).order_by("-priority")
+
+        for template in template_stack:
+            if template.template.template_identifier in self.context:
+                template_context = self.context[template.template.template_identifier]
+                email = TemplatedEmail(
+                    template=template.template,
+                    email=self.email,
+                    template_data=template_context
+                )
+                email.send()
+
+          

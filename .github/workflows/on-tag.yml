@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Copy environment variables and dockerfile file for production
-        run: cp environments/development/.env .env && cp environments/development/Dockerfile.deploy Dockerfile
+        run: cp environments/local/.env .env && cp environments/local/Dockerfile.deploy Dockerfile
 
       - name: Copy .ebextensions folder for production
         run: cp -r environments/development/.ebextensions .ebextensions

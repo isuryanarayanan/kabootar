@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+
+  database:
+    image: postgres:13
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=kabootar_user
+      - POSTGRES_PASSWORD=kabootar_password
+      - POSTGRES_DB=kabootar
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
   api:
     image: kabootar.dkr.ecr.ap-kabootar-1.amazonaws.com/kabootar:latest
     env_file:
@@ -10,3 +23,4 @@ services:
 
 volumes:
   static_data:
+  database_data:

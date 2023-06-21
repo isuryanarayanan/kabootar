@@ -2,13 +2,17 @@ version: '3.8'
 
 services:
 
-  mongodb:
-    image: mongodb/mongodb-community-server:latest
-    container_name: local.mongodb
+  database:
+    image: postgres:13
+    container_name: local.database
     ports:
-      - 27017:27017
+      - "5432:5432"
     environment:
-      MONGODB_INITDB_DATABASE: local
+      - POSTGRES_USER=kabootar_user
+      - POSTGRES_PASSWORD=kabootar_password
+      - POSTGRES_DB=kabootar
+    volumes:
+      - database_data:/var/lib/postgresql/data
 
   kabootar-local:
     container_name: local.project
@@ -18,18 +22,21 @@ services:
       args:
         - USER_ID=$UID
         - GROUP_ID=$GID
-    command: sh -c "pytest && uvicorn kabootar.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: python manage.py runserver 0.0.0.0:8000
+    # entrypoint: /entrypoint.sh
     env_file:
       - .env
     ports:
       - "8000:8000"
     depends_on:
-      - mongodb
+      - database
     volumes:
+      - static_data:/vol/web
       - ../../kabootar:/app
 
 volumes:
-  mongo:
+  static_data:
+  database_data:
 
 
 

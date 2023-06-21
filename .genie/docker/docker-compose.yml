@@ -2,13 +2,17 @@ version: '3.8'
 
 services:
 
-  mongodb:
-    image: mongodb/mongodb-community-server:latest
-    container_name: __keyword__.mongodb
+  database:
+    image: postgres:13
+    container_name: __keyword__.database
     ports:
-      - 27017:27017
+      - "5432:5432"
     environment:
-      MONGODB_INITDB_DATABASE: __keyword__
+      - POSTGRES_USER=__keyword___user
+      - POSTGRES_PASSWORD=__keyword___password
+      - POSTGRES_DB=__keyword___database
+    volumes:
+      - database_data:/var/lib/postgresql/data
 
   kabootar-__keyword__:
     container_name: __keyword__.project
@@ -24,12 +28,14 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - mongodb
+      - database
     volumes:
+      - static_data:/vol/web
       - ../../kabootar:/app
 
 volumes:
-  mongo:
+  static_data:
+  database_data:
 
 
 
