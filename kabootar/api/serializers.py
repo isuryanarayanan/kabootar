@@ -7,6 +7,21 @@ class EmailSesProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailSesProvider
         fields = '__all__'
+    
+    def validate(self, data):
+        if data['access_key'] is None:
+            raise serializers.ValidationError("Access key is required")
+        
+        if data['secret_key'] is None:
+            raise serializers.ValidationError("Secret key is required")
+        
+        if data['region'] is None:
+            raise serializers.ValidationError("Region is required")
+        
+        return data
+    
+    def create(self, validated_data):
+        return super().create(validated_data)
 
 class EmailSesTemplateSerializer(serializers.ModelSerializer):
     provider_name = serializers.CharField(write_only=True)
@@ -45,6 +60,14 @@ class TransactionTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionTemplate
         fields = ['template', 'priority']
+    
+    def validate_template(self, value):
+        try:
+            template = EmailSesTemplate.objects.get(name=value)
+        except EmailSesTemplate.DoesNotExist:
+            raise serializers.ValidationError("Template does not exist")
+        
+        return template.name
 
 class TransactionSerializer(serializers.ModelSerializer):
     stack = TransactionTemplateSerializer(many=True, write_only=True)
@@ -55,6 +78,13 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         stack_data = validated_data.pop('stack')
+
+        if len(stack_data) == 0:
+            raise serializers.ValidationError("Stack is required")
+        
+        if TransactionTemplateSerializer(data=stack_data, many=True).is_valid() is False:
+            raise serializers.ValidationError("Invalid stack")
+
         transaction = Transaction.objects.create(**validated_data)
 
         for item in stack_data:
