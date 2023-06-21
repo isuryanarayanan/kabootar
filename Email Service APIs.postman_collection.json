@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "8d859566-a96d-4498-9313-3abee17a1565",
+		"name": "Email Service APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "8764261"
+	},
+	"item": [
+		{
+			"name": "Create Email SES Provider",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"channel\":\"EMAIL\",\n  \"name\": \"AWS_1\",\n  \"description\": \"SES Provider Description\",\n  \"provider\": \"SES\",\n  \"access_key\": \"--your--aws--access--key--\",\n  \"secret_key\": \"--your--aws--access--secret--key--\",\n  \"region\": \"--your--ses--region--\",\n  \"sender\": \"--your--ses--verified--identity--\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/email-ses-providers/"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Email SES Template",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"MySimpleTemplate2\",\n  \"subject\": \"Template Subject\",\n  \"text_part\": \"Template Text Part\",\n  \"html_part\": \"Template HTML Part\",\n  \"provider_name\": \"AWS_1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/email-ses-templates/"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Transaction Name\",\n  \"description\": \"Transaction Description\",\n  \"stack\":[\n      {\n          \"template\":\"MySimpleTemplate\",\n          \"priority\":\"1\"\n      },\n      {\n          \"template\":\"MySimpleTemplate2\",\n          \"priority\":\"0\"\n      }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/transactions/"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Send Transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"rajiiajayakumar@gmail.com\",\n  \"context\": {\n      \"MySimpleTemplate\":{},\n      \"MySimpleTemplate2\":{}\n  },\n  \"transaction\": \"Transaction Name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/send-transactions/"
+			},
+			"response": []
+		}
+	]
+}
