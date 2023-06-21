@@ -28,16 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# EMAIL_BACKEND = 'project.local.ses_backend.SESBackend'
-# AWS_ACCESS_KEY_ID = os.environ.get(
-#     "AWS_ACCESS_KEY_ID", default='AKIAIOSFODNN7EXAMPLE')
-# AWS_SECRET_ACCESS_KEY = os.environ.get(
-#     "AWS_SECRET_ACCESS_KEY", default='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY')
-# AWS_SES_REGION = os.environ.get("AWS_SES_REGION", default='ap-south-1')
-# AWS_REGION = os.environ.get("AWS_REGION", default='ap-south-1')
-
-# DEFAULT_NOTIFICATION_EMAIL = 'a.suryanarayanan2000@gmail.com'
-
 INSTALLED_APPS = [
 
     'django.contrib.admin',
@@ -49,9 +39,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
-
-    # 'aws',
-    # 'events',
 
     'email_service',
     'transactions',
@@ -148,32 +135,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-# ----------------
-# AWS S3 Bucket
-# ----------------
-
-# AWS_STORAGE_BUCKET_NAME = os.environ.get(
-#     "AWS_S3_BUCKET", default='kabootar')
-# AWS_S3_REGION = os.environ.get("AWS_S3_REGION", default='ap-south-1')
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-
-# ----------------
-# AWS S3 Bucket Static Files and Media
-# ----------------
-
-# AWS_DEFAULT_ACL = 'public-read'
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
-
-# MEDIAFILES_LOCATION = 'media'
-# MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-# DEFAULT_FILE_STORAGE = 'project.local.storage_backend.MediaStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
